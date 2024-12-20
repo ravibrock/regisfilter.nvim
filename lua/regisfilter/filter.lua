@@ -1,13 +1,23 @@
 local M = {}
 
 -- Save value of vim.fn.setreg
-M.setreg_orig = vim.fn.setreg
+M.setreg = vim.fn.setreg
 
 -- Override vim.fn.setreg to update the register table
 function M.setreg_custom(opts, reg, val, ...)
-    local ret = M.setreg_orig(reg, val, ...)
+    local ret = M.setreg(reg, val, ...)
     M.diff(opts)
     return ret
+end
+
+-- Custom clipboard handling
+function M.clipboard(opts)
+    if opts.system_clipboard == "unnamed" then
+        M.setreg('"', vim.fn.getreg("*"))
+    end
+    if opts.system_clipboard == "unnamedplus" then
+        M.setreg('"', vim.fn.getreg("+"))
+    end
 end
 
 -- Check which register was updated
@@ -26,19 +36,19 @@ end
 -- Handle special cases for registers
 function M.update_reg(opts, reg, val)
     if reg == '"' then
-        vim.fn.setreg_orig('"', val)
-        if string.find(opts.system_clipboard, "unnamed") then
-            vim.fn.setreg("*", val)
+        M.setreg('"', val)
+        if opts.system_clipboard == "unnamed" then
+            M.setreg("*", val)
         end
-        if string.find(opts.system_clipboard, "unnamedplus") then
-            vim.fn.setreg("+", val)
+        if opts.system_clipboard == "unnamedplus" then
+            M.setreg("+", val)
         end
     elseif reg == '1' then
         for i = 9, 1, -1 do
-            vim.fn.setreg_orig(tostring(i), vim.g.registers[tostring(i)])
+            M.setreg(tostring(i), vim.g.registers[tostring(i)])
         end
     else
-        vim.fn.setreg_orig(reg, val)
+        M.setreg(reg, val)
     end
 end
 

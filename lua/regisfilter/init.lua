@@ -4,12 +4,13 @@ local defaults = {
     ft_patterns = {}, -- List of patterns to match for specific filetypes
     registers = { '"', "1", "-" }, -- List of registers to monitor (only need "1" for 1-9)
     system_clipboard = "", -- Use the system clipboard
+    remap_paste = true, -- Remap p and P to sync with clipboard settings
 }
 
 -- Setup function for the plugin
 function M.setup(opts)
     local options = opts or {}
-    local filter = require("filter")
+    local filter = require("regisfilter.filter")
 
     -- Populate options table
     for k, v in pairs(defaults) do
@@ -35,6 +36,24 @@ function M.setup(opts)
 
     -- Create TextYankPost autocommand
     vim.api.nvim_create_autocmd("TextYankPost", { "*", false, function() filter.diff(options) end })
+
+    -- Create paste autocommand
+    if options.remap_paste then
+        vim.api.nvim_create_user_command(
+            "RegisfilterPaste",
+            function() filter.clipboard(options) end,
+            { nargs = 0 }
+        )
+        vim.api.nvim_create_augroup("RegisfilterPaste", {})
+        vim.api.nvim_create_autocmd("RegisfilterPaste", {
+            "BufEnter",
+            callback = function()
+                vim.api.nvim_set_keymap("n", "p", ":RegisfilterPaste<CR>p", { noremap = true, silent = true })
+                vim.api.nvim_set_keymap("n", "P", ":RegisfilterPaste<CR>P", { noremap = true, silent = true })
+                vim.api.nvim_create_augroup("RegisfilterPaste", {})
+            end
+        })
+    end
 end
 
 return M
