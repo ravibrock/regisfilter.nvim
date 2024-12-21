@@ -36,19 +36,25 @@ end
 -- Handle special cases for registers
 function M.update_reg(opts, reg)
     if reg == '"' then
-        M.setreg('"', _G.registers[reg])
-        if opts.system_clipboard == "unnamed" then
-            M.setreg("*", _G.registers[reg])
-        end
-        if opts.system_clipboard == "unnamedplus" then
-            M.setreg("+", _G.registers[reg])
+        if _G.registers[reg] ~= "" then
+            if opts.system_clipboard == "unnamed" then
+                M.setreg('"', vim.fn.getreg("*"))
+            elseif opts.system_clipboard == "unnamedplus" then
+                M.setreg('"', vim.fn.getreg("+"))
+            else
+                M.setreg('"', _G.registers[reg])
+            end
         end
     elseif reg == "1" then
         for i = 1, 9, 1 do
-            M.setreg(tostring(i), _G.registers[tostring(i)])
+            if _G.registers[tostring(i)] ~= "" then
+                M.setreg(tostring(i), _G.registers[tostring(i)])
+            end
         end
     else
-        M.setreg(reg, _G.registers[reg])
+        if _G.registers[reg] ~= "" then
+            M.setreg(reg, _G.registers[reg])
+        end
     end
 end
 
