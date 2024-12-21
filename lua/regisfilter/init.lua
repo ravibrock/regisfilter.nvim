@@ -62,15 +62,8 @@ function M.setup(opts)
         { nargs = 0 }
     )
     if options.remap_paste then
-        vim.api.nvim_create_augroup("RegisfilterPaste", {})
-        vim.api.nvim_create_autocmd("BufEnter", {
-            group = "RegisfilterPaste",
-            callback = function()
-                vim.api.nvim_set_keymap("n", "p", ":RegisfilterPaste<CR>p", { noremap = true, silent = true })
-                vim.api.nvim_set_keymap("n", "P", ":RegisfilterPaste<CR>P", { noremap = true, silent = true })
-                vim.api.nvim_create_augroup("RegisfilterPaste", {})
-            end
-        })
+        vim.api.nvim_set_keymap("n", "p", ":RegisfilterPaste<CR>p", { noremap = true, silent = true })
+        vim.api.nvim_set_keymap("n", "P", ":RegisfilterPaste<CR>P", { noremap = true, silent = true })
     end
 end
 
