@@ -42,7 +42,8 @@ I recommend using lazy.nvim <https://github.com/folke/lazy.nvim>
 <
 
 Youprobably want to keep the default settings except for specifying
-`global_patterns`.
+`global_patterns`. Additionally, it is important to _not_ lazy load
+Regisfilter, as it needs to be able to monitor the registers.
 
 
 ADVANCED CONFIGURATION *regisfilter-regis(fil)ter.nvim-advanced-configuration*
