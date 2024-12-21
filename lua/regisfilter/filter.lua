@@ -43,7 +43,7 @@ function M.update_reg(opts, reg, val)
         if opts.system_clipboard == "unnamedplus" then
             M.setreg("+", val)
         end
-    elseif reg == '1' then
+    elseif reg == "1" then
         for i = 1, 9, 1 do
             M.setreg(tostring(i), _G.registers[tostring(i)])
         end
