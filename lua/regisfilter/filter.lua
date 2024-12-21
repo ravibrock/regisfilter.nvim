@@ -22,12 +22,12 @@ end
 
 -- Check which register was updated
 function M.diff(opts)
-    for _, reg in ipairs(vim.g.registers) do
-        if vim.g.registers[reg] ~= vim.fn.getreg(reg) then
-            if M.filter(reg, opts) then
-                M.update_reg(opts, reg, vim.g.registers[reg])
+    for reg, val in pairs(_G.registers) do
+        if val ~= vim.fn.getreg(reg) then
+            if M.filter(opts, reg) then
+                M.update_reg(opts, reg, val)
             else
-                M.update_cache(reg)
+                M.update_cache(opts, reg)
             end
         end
     end
@@ -44,8 +44,8 @@ function M.update_reg(opts, reg, val)
             M.setreg("+", val)
         end
     elseif reg == '1' then
-        for i = 9, 1, -1 do
-            M.setreg(tostring(i), vim.g.registers[tostring(i)])
+        for i = 1, 9, 1 do
+            M.setreg(tostring(i), _G.registers[tostring(i)])
         end
     else
         M.setreg(reg, val)
@@ -53,28 +53,30 @@ function M.update_reg(opts, reg, val)
 end
 
 -- Update the cache with the current register value
-function M.update_cache(reg)
+function M.update_cache(opts, reg)
     if reg == "1" then
         for i = 9, 1, -1 do
-            vim.g.registers[tostring(i)] = vim.fn.getreg(tostring(i))
+            _G.registers[tostring(i)] = vim.fn.getreg(tostring(i))
+        end
+    elseif reg == '"' then
+        _G.registers['"'] = vim.fn.getreg('"')
+        if opts.system_clipboard == "unnamed" then
+            M.setreg("*", _G.registers['"'])
+        elseif opts.system_clipboard == "unnamedplus" then
+            M.setreg("+", _G.registers['"'])
         end
     else
-        vim.g.registers[reg] = vim.fn.getreg(reg)
+        _G.registers[reg] = vim.fn.getreg(reg)
     end
 end
 
 -- Match the register against the patterns
-function M.filter(reg, opts)
+function M.filter(opts, reg)
     local new = vim.fn.getreg(reg)
 
     for _, pattern in ipairs(opts.patterns) do
-        if new:match(pattern) then
-            return true
-        end
-    end
-
-    for _, pattern in ipairs(opts.ft_patterns[vim.bo.filetype] or {}) do
-        if new:match(pattern) then
+        if string.match(new, pattern) then
+            print(string.match(new, pattern))
             return true
         end
     end
