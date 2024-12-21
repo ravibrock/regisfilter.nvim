@@ -76,24 +76,23 @@ function M.filter(opts, reg)
 
     for _, pattern in ipairs(opts.global_patterns) do
         if string.match(new, pattern) then
-            print(string.match(new, pattern))
-            return true
+            return opts.negative_match
         end
     end
 
     for _, pattern in ipairs(opts.register_patterns[reg] or {}) do
         if string.match(reg, pattern) then
-            return true
+            return opts.negative_match
         end
     end
 
     for _, pattern in ipairs(opts.ft_patterns[vim.bo.filetype] or {}) do
         if string.match(reg, pattern) then
-            return true
+            return opts.negative_match
         end
     end
 
-    return false
+    return not opts.negative_match
 end
 
 return M
