@@ -7,7 +7,7 @@ I recommend using [lazy.nvim](https://github.com/folke/lazy.nvim):
 ```lua
 {
     {
-        dir = "~/Desktop/regisfilter.nvim",
+        "ravibrock/regisfilter.nvim",
         opts = {
             global_patterns = {}, -- List of patterns to match for everything
             register_patterns = {}, -- List of patterns to match for specific registers
@@ -21,3 +21,6 @@ I recommend using [lazy.nvim](https://github.com/folke/lazy.nvim):
 }
 ```
 You probably want to keep the default settings except for specifying `global_patterns`.
+
+## Advanced configuration
+You can use `register_patterns` and `ft_patterns` to define patterns to match for specific filetypes and registers (if, for example, you want certain things to be copied in C files but not Lua). Additionally, Regisfilter defines the command `:RegisfilterPaste`. Mapping `p` to `:RegisfilterPaste<CR>p` is what allows `p` to sync with the system clipboard. This is mostly intended for internal use, but setting `remap_paste` to `false` and remapping commands like `p` yourself allows for more fine-grained control over which keybinds are remapped.

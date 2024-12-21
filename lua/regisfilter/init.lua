@@ -56,12 +56,12 @@ function M.setup(opts)
     })
 
     -- Create paste autocommand
+    vim.api.nvim_create_user_command(
+        "RegisfilterPaste",
+        function() filter.clipboard(options) end,
+        { nargs = 0 }
+    )
     if options.remap_paste then
-        vim.api.nvim_create_user_command(
-            "RegisfilterPaste",
-            function() filter.clipboard(options) end,
-            { nargs = 0 }
-        )
         vim.api.nvim_create_augroup("RegisfilterPaste", {})
         vim.api.nvim_create_autocmd("BufEnter", {
             group = "RegisfilterPaste",

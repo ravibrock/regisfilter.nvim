@@ -35,7 +35,6 @@ end
 
 -- Handle special cases for registers
 function M.update_reg(opts, reg)
-    -- FIX: It seems that toggling negative_match breaks this? Seems to be the last bug to fix
     if reg == '"' then
         M.setreg('"', _G.registers[reg])
         if opts.system_clipboard == "unnamed" then
