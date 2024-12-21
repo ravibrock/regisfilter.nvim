@@ -1,6 +1,8 @@
 local M = {}
 local defaults = {
-    patterns = {}, -- List of patterns to match
+    global_patterns = {}, -- List of patterns to match for everything
+    register_patterns = {}, -- List of patterns to match for specific registers
+    ft_patterns = {}, -- List of patterns to match for specific filetypes
     registers = { '"', "1", "-" }, -- List of registers to monitor (only need "1" for 1-9)
     system_clipboard = "", -- Use the system clipboard
     remap_paste = true, -- Remap p and P to sync with clipboard settings

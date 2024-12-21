@@ -74,9 +74,21 @@ end
 function M.filter(opts, reg)
     local new = vim.fn.getreg(reg)
 
-    for _, pattern in ipairs(opts.patterns) do
+    for _, pattern in ipairs(opts.global_patterns) do
         if string.match(new, pattern) then
             print(string.match(new, pattern))
+            return true
+        end
+    end
+
+    for _, pattern in ipairs(opts.register_patterns[reg] or {}) do
+        if string.match(reg, pattern) then
+            return true
+        end
+    end
+
+    for _, pattern in ipairs(opts.ft_patterns[vim.bo.filetype] or {}) do
+        if string.match(reg, pattern) then
             return true
         end
     end
