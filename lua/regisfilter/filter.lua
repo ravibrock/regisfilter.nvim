@@ -25,7 +25,7 @@ function M.diff(opts)
     for reg, val in pairs(_G.registers) do
         if val ~= vim.fn.getreg(reg) then
             if M.filter(opts, reg) then
-                M.update_reg(opts, reg, val)
+                M.update_reg(opts, reg)
             else
                 M.update_cache(opts, reg)
             end
@@ -34,21 +34,22 @@ function M.diff(opts)
 end
 
 -- Handle special cases for registers
-function M.update_reg(opts, reg, val)
+function M.update_reg(opts, reg)
+    -- FIX: It seems that toggling negative_match breaks this? Seems to be the last bug to fix
     if reg == '"' then
-        M.setreg('"', val)
+        M.setreg('"', _G.registers[reg])
         if opts.system_clipboard == "unnamed" then
-            M.setreg("*", val)
+            M.setreg("*", _G.registers[reg])
         end
         if opts.system_clipboard == "unnamedplus" then
-            M.setreg("+", val)
+            M.setreg("+", _G.registers[reg])
         end
     elseif reg == "1" then
         for i = 1, 9, 1 do
             M.setreg(tostring(i), _G.registers[tostring(i)])
         end
     else
-        M.setreg(reg, val)
+        M.setreg(reg, _G.registers[reg])
     end
 end
 

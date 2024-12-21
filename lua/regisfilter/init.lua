@@ -16,9 +16,13 @@ function M.setup(opts)
     }
 
     -- Populate options table
-    local options = opts or {}
+    local options = {}
     for k, v in pairs(defaults) do
-        options[k] = options[k] or v
+        if opts[k] ~= nil then
+            options[k] = opts[k]
+        else
+            options[k] = v
+        end
     end
 
     -- Override system clipboard option
