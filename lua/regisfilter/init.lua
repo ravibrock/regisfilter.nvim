@@ -1,19 +1,21 @@
 local M = {}
-local defaults = {
-    global_patterns = {}, -- List of patterns to match for everything
-    register_patterns = {}, -- List of patterns to match for specific registers
-    ft_patterns = {}, -- List of patterns to match for specific filetypes
-    registers = { '"', "1", "-" }, -- List of registers to monitor (only need "1" for 1-9)
-    system_clipboard = "", -- Use the system clipboard
-    remap_paste = true, -- Remap p and P to sync with clipboard settings
-}
 
 -- Setup function for the plugin
 function M.setup(opts)
-    local options = opts or {}
     local filter = require("regisfilter.filter")
 
+    -- Default options
+    local defaults = {
+        global_patterns = {}, -- List of patterns to match for everything
+        register_patterns = {}, -- List of patterns to match for specific registers
+        ft_patterns = {}, -- List of patterns to match for specific filetypes
+        registers = { '"', "1", "-" }, -- List of registers to monitor (only need "1" for 1-9)
+        system_clipboard = "", -- Use the system clipboard
+        remap_paste = true, -- Remap p and P to sync with clipboard settings
+    }
+
     -- Populate options table
+    local options = opts or {}
     for k, v in pairs(defaults) do
         options[k] = options[k] or v
     end
