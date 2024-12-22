@@ -15,6 +15,9 @@ function M.setup(opts)
         remap_paste = true, -- Remap p and P to sync with clipboard settings
     }
 
+    -- Create augroup
+    vim.api.nvim_create_augroup("Regisfilter", {})
+
     -- Populate options table
     local options = {}
     for k, v in pairs(defaults) do
@@ -41,6 +44,12 @@ function M.setup(opts)
     elseif options.system_clipboard == "unnamedplus" then
         _G.registers['"'] = vim.fn.getreg("+", 1)
     end
+    vim.api.nvim_create_autocmd("VimEnter", {
+        group = "Regisfilter",
+        callback = function()
+            filter.setreg('"', _G.registers['"'])
+        end
+    })
 
     -- Override setreg
     vim.fn.setreg = function(reg, val, ...) ---@diagnostic disable-line: duplicate-set-field
