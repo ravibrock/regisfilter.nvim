@@ -56,9 +56,12 @@ function M.setup(opts)
     })
 
     -- Create paste autocommand
+    function M.clipboard()
+        filter.clipboard(options)
+    end
     vim.api.nvim_create_user_command(
         "RegisfilterPaste",
-        function() filter.clipboard(options) end,
+        function() M.clipboard() end,
         { nargs = 0 }
     )
     if options.remap_paste then
