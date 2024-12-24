@@ -18,17 +18,16 @@ function M.clipboard(opts)
     if opts.system_clipboard == "unnamedplus" then
         M.setreg('"', vim.fn.getreg("+"))
     end
+    M.update_cache(opts, '"')
 end
 
 -- Check which register was updated
 function M.diff(opts)
-    for reg, val in pairs(_G.registers) do
-        if val ~= vim.fn.getreg(reg) then
-            if M.filter(opts, reg) then
-                M.update_reg(opts, reg)
-            else
-                M.update_cache(opts, reg)
-            end
+    for reg, _ in pairs(_G.registers) do
+        if M.filter(opts, reg) then
+            M.update_reg(opts, reg)
+        else
+            M.update_cache(opts, reg)
         end
     end
 end
